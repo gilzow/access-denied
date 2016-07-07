@@ -1,0 +1,31 @@
+#we dont want to allow access directly to any php files
+<FilesMatch "\.(?i:php)$">
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+</FilesMatch>
+
+#except these php files
+<FilesMatch "^(wp-tinymce|ms-files).php$">
+  <IfModule !mod_authz_core.c>
+    Allow from all
+  </IfModule>
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+</FilesMatch>
+
+# and since from root we're denying everything, we need to allow js, css and ico
+<FilesMatch "\.(css|js|ico)$">
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Allow from all
+  </IfModule>
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+</FilesMatch>

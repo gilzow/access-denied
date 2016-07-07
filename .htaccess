@@ -1,0 +1,75 @@
+# Code to be used in the htaccess file
+
+# note, mod_authz_core.c is for Apache >= 2.3
+
+# Block external access to readme.html
+<Files readme.html>
+	<IfModule mod_authz_core.c>
+		Require all denied
+	</IfModule>
+	<IfModule !mod_authz_core.c>
+		Order allow,deny
+		Deny from all
+	</IfModule>
+</Files>
+
+# Block external access to xmlrpc
+<Files xmlrpc.php>
+	<IfModule mod_authz_core.c>
+		Require all denied
+	</IfModule>
+	<IfModule !mod_authz_core.c>
+		Order allow,deny
+		Deny from all
+	</IfModule>
+</Files>
+
+# Block external access to license.txt
+<Files license.txt>
+	<IfModule mod_authz_core.c>
+		Require all denied
+	</IfModule>
+	<IfModule !mod_authz_core.c>
+		Order allow,deny
+		Deny from all
+	</IfModule>
+</Files>
+
+#OR we can do
+#<FilesMatch "^(xmlrpc.php|readme.html|license.txt)$">
+#  <IfModule !mod_authz_core.c>
+#    Order allow,deny
+#    Deny from all
+#  </IfModule>
+#  <IfModule mod_authz_core.c>
+#    Require all denied
+#  </IfModule>
+#</FilesMatch>
+
+<FilesMatch "\.">
+    <IfModule !mod_authz_core.c>
+      Order allow,deny
+      Deny from all
+    </IfModule>
+    <IfModule mod_authz_core.c>
+      Require all denied
+    </IfModule>
+</FilesMatch>
+
+#<FilesMatch "^(/)?$">
+#    Order Allow,Deny
+#    Allow from all
+#</FilesMatch>
+
+<FilesMatch "(index|wp-(cron|login|comments-post|signup|trackback|mail))\.php$">
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Allow from all
+  </IfModule>
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+</FilesMatch>
+
+#and then add
+ErrorDocument 403 /404

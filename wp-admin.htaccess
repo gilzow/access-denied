@@ -1,0 +1,21 @@
+# ideally, only allow access to those ip address/ranges that should have access
+<FilesMatch ".*">
+    <IfModule !mod_authz_core.c>
+        Allow from 0.0.0.1
+        Allow from 0.0.0.2
+    </IfModule>
+    <IfModule mod_authz_core.c>
+        Require ip 0.0.0.1
+        Require ip 0.0.0.2
+    </IfModule>
+</FilesMatch>
+
+# but if not, you'll need to allow everything and let wordpress handle access
+<FilesMatch ".*">
+    <IfModule !mod_authz_core.c>
+        Allow from all
+    </IfModule>
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+</FilesMatch>

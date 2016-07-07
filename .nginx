@@ -1,0 +1,10 @@
+server {
+
+ location /xmlrpc.php {
+      deny all;
+    }
+
+ location /readme.html {
+      deny all;
+ }
+}

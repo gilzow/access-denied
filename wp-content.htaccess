@@ -1,0 +1,22 @@
+#send all forbiddens to the 404 processor
+ErrorDocument 403 /404
+
+#Deny everything
+<IfModule !mod_authz_core.c>
+  Order allow,deny
+  Deny from all
+</IfModule>
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+
+#only allow access to specific file types
+<FilesMatch "\.(css|jpe?g|gif|png|svg|js(on)?|bmp|ico|eot|ttf|woff|woff2|xml|pdf)$">
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Allow from all
+  </IfModule>
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+</FilesMatch>
