@@ -23,7 +23,7 @@ ErrorDocument 403 /404
 </IfModule>
 
 #only allow access to specific file types
-<FilesMatch "\.(css|jpe?g|gif|png|svg|js(on)?|bmp|ico|eot|ttf|woff|woff2|xml|pdf)$">
+<FilesMatch "\.(?i:css|jpe?g|gif|png|svg|js(on)?|bmp|ico|eot|ttf|woff|woff2|xml|pdf)$">
   <IfModule !mod_authz_core.c>
     Order allow,deny
     Allow from all
