@@ -39,7 +39,6 @@ function arRemoveVersion($strSrc){
     global $wp_version;
 
     if(false!== strpos($strSrc,'ver=')){
-        //really, PHP?
         parse_str(parse_url($strSrc,PHP_URL_QUERY),$aryURLQuery);
 
         if(isset($aryURLQuery['ver']) && $wp_version == $aryURLQuery['ver']){
