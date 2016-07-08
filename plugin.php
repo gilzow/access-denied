@@ -1,4 +1,10 @@
 <?php
+/*
+Plugin Name: Anit-Recon
+Description: Attempts to prevent recon data gathering
+Author: WpCampus
+Version: 0.0.1
+*/
 /**
  * Code to be used in the plugin
  * User: gilzowp
