@@ -3,6 +3,9 @@
 # note, mod_authz_core.c is for Apache >= 2.3
 
 # Block external access to readme.html
+
+Options -Indexes
+
 <Files readme.html>
 	<IfModule mod_authz_core.c>
 		Require all denied
@@ -56,10 +59,6 @@
     </IfModule>
 </FilesMatch>
 
-#<FilesMatch "^(/)?$">
-#    Order Allow,Deny
-#    Allow from all
-#</FilesMatch>
 
 <FilesMatch "(index|wp-(cron|login|comments-post|signup|trackback|mail))\.php$">
   <IfModule !mod_authz_core.c>
