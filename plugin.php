@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Anit-Recon
+Plugin Name: Anti-Recon
 Description: Attempts to prevent recon data gathering
 Author: WpCampus
 Version: 0.0.1
