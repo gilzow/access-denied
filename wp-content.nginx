@@ -1,15 +1,8 @@
 # nginx configuration
+error_page 403 /404;
 location ~* plugins/baz/foo\.php$ {
 }
-location ~* \.(?i:jpe?g|gif|png|svg|bmp|ico)$ {
-}
-location ~* \.(?i:css|js|eot|ttf|woff|woff2)$ {
-}
-location ~* \.(?i:pdf|docx?|xlsx?|pp[st]x?|psd|odt|key)$ {
-}
-location ~* \.(?i:mp[2-5g]|m4[av]|og[gv]|wav|mov|wm[av]|avi|3g[p2])$ {
-}
-location ~* \.(?i:xml|json)$ {
+location ~* \.(?i:jpe?g|gif|png|svg|bmp|ico|css|js(?:on)?|eot|ttf|woff|woff2|pdf|docx?|xlsx?|pp[st]x?|psd|odt|key|mp[2-5g]|m4[av]|og[gv]|wav|mov|wm[av]|avi|3g[p2])$ {
 }
 location / {
 if ($request_uri ~ "screenshot(?:\-\d+)?\.(?:jpe?g|png|gif)$"){
