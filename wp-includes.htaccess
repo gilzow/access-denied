@@ -1,3 +1,15 @@
+#RewriteCond version
+
+
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !(?:wp-tinymce|ms-files)\.php$ [NC]
+RewriteCond %{REQUEST_URI} \.php$ [NC]
+RewriteRule .*  - [F,L]
+
+
+
+
+
 #we dont want to allow access directly to any php files
 <FilesMatch "\.(?i:php)$">
   <IfModule !mod_authz_core.c>
@@ -19,8 +31,8 @@
   </IfModule>
 </FilesMatch>
 
-# and since from root we're denying everything, we need to allow js, css and ico
-<FilesMatch "\.(css|js|ico)$">
+# and since from root we're denying everything, we need to allow js, css, ico, etc
+<FilesMatch "\.(css|jpe?g|gif|png|svg|js(on)?|bmp|ico|eot|ttf|woff|woff2|xml|pdf|xap|cer|swf)$">
   <IfModule !mod_authz_core.c>
     Order allow,deny
     Allow from all
