@@ -1,5 +1,5 @@
 #send all forbiddens to the 404 processor
-ErrorDocument 403 /404
+#ErrorDocument 403 /404
 
 #we dont want to allow access directly to any php files
 <FilesMatch "\.(?i:php)$">
@@ -12,6 +12,42 @@ ErrorDocument 403 /404
   </IfModule>
 </FilesMatch>
 
+RewriteEngine On
+#RewriteRule version, all-in-one
+#alternative rewritecond version
+#RewriteCond %{REQUEST_URI} screenshot(?:\-\d+)?\.(?:jpe?g|png|gif)$ [NC,OR]
+#RewriteCond %{REQUEST_URI} !plugins/baz/foo\.php$ [NC]
+RewriteCond %{REQUEST_URI} !\.(?i:jpe?g|gif|png|svg|bmp|ico|css|js(?:on)?|eot|ttf|woff|woff2|pdf|docx?|xlsx?|pp[st]x?|psd|odt|key|mp[2-5g]|m4[av]|og[gv]|wav|mov|wm[av]|avi|3g[p2])$ [NC]
+RewriteRule .*  - [F,L]
+
+#RewriteRule version broken up
+RewriteEngine On
+
+#Don't allow screenshots
+#RewriteCond %{REQUEST_URI} screenshot(?:\-\d+)?\.(?:jpe?g|png|gif)$ [NC,OR]
+
+#uncomment if you have a specific file you need
+#RewriteCond %{REQUEST_URI} !plugins/baz/foo\.php$ [NC]
+
+#allow images jpg,jpeg,gif,png,svg,bmp,ico
+RewriteCond %{REQUEST_URI} !\.(?i:jpe?g|gif|png|svg|bmp|ico)$ [NC]
+
+#allow js, css and fonts
+RewriteCond %{REQUEST_URI} !\.(?i:css|js|eot|ttf|woff|woff2)$ [NC]
+
+# allow documents: pdf, doc, docx, xls, xslx, pps, ppsx, ppt, pptx, psd, odt, key 
+RewriteCond %{REQUEST_URI} !\.(?i:pdf|docx?|xlsx?|pp[st]x?|psd|odt|key)$ [NC]
+
+# allow audio, video:  mp2, mp3, mp4, mp5, mpg, m4a, m4v, ogg, ogv, wav, mov, wma, wmv, avi, 3gp, 3g2 
+RewriteCond %{REQUEST_URI} !\.(?i:mp[2-5g]|m4[av]|og[gv]|wav|mov|wm[av]|avi|3g[p2])$ [NC]
+
+#allow data
+RewriteCond %{REQUEST_URI} !\.(?i:xml|json)$ [NC]
+
+RewriteRule .*  - [F,L]
+
+
+#FilesMatch version
 
 #Deny everything
 <IfModule !mod_authz_core.c>
@@ -22,8 +58,19 @@ ErrorDocument 403 /404
   Require all denied
 </IfModule>
 
-#only allow access to specific file types
-<FilesMatch "\.(?i:css|jpe?g|gif|png|svg|js(on)?|bmp|ico|eot|ttf|woff|woff2|xml|pdf)$">
+#Deny files in case we allowed any in parents
+<FilesMatch "\.">
+    <IfModule !mod_authz_core.c>
+      Order allow,deny
+      Deny from all
+    </IfModule>
+    <IfModule mod_authz_core.c>
+      Require all denied
+    </IfModule>
+</FilesMatch>
+
+# allow images
+<FilesMatch "\.(?i:jpe?g|gif|png|svg|bmp|ico)$">
   <IfModule !mod_authz_core.c>
     Order allow,deny
     Allow from all
@@ -32,3 +79,73 @@ ErrorDocument 403 /404
     Require all granted
   </IfModule>
 </FilesMatch>
+
+#except for screenshots
+<FilesMatch "screenshot(?:\-\d+)?\.(?:jpe?g|png|gif)$">
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+</FilesMatch>
+
+# allow css, js, fonts
+<FilesMatch "\.(?i:css|js|eot|ttf|woff|woff2)$">
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Allow from all
+  </IfModule>
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+</FilesMatch>
+
+# allow documents: pdf, doc, docx, xls, xslx, pps, ppsx, ppt, pptx, psd, odt, key   
+<FilesMatch "\.(?i:pdf|docx?|xlsx?|pp[st]x?|psd|odt|key)$">
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Allow from all
+  </IfModule>
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+</FilesMatch>
+ 
+# allow audio video:  mp2, mp3, mp4, mpg, m4a, m4v, ogg, ogv, wav, mov, wma, wmv, avi, 3gp, 3g2    
+<FilesMatch "\.(?i:mp[2-5g]|m4[av]|og[gv]|wav|mov|wm[av]|avi|3g[p2])$">
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Allow from all
+  </IfModule>
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+</FilesMatch>
+
+# data docs
+<FilesMatch "\.(?i:xml|json)$">
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Allow from all
+  </IfModule>
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+</FilesMatch>
+
+#only allow access to specific file types, all in one
+<FilesMatch "\.(?i:jpe?g|gif|png|svg|bmp|ico|css|js(?:on)?|eot|ttf|woff|woff2|pdf|docx?|xlsx?|pp[st]x?|psd|odt|key|mp[2-5g]|m4[av]|og[gv]|wav|mov|wm[av]|avi|3g[p2])$">
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Allow from all
+  </IfModule>
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+</FilesMatch>
+
+#alternative rewritecond version
+#RewriteCond %{REQUEST_URI} !\.(?i:jpe?g|gif|png|svg|bmp|ico|css|js(?:on)?|eot|ttf|woff|woff2|pdf|docx?|xlsx?|pp[st]x?|psd|odt|key|mp[2-5g]|m4[av]|og[gv]|wav|mov|wm[av]|avi|3g[p2])$ [NC]
+#RewriteRule .*  - [F,L]
