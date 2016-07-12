@@ -1,0 +1,18 @@
+# nginx configuration
+location ~* plugins/baz/foo\.php$ {
+}
+location ~* \.(?i:jpe?g|gif|png|svg|bmp|ico)$ {
+}
+location ~* \.(?i:css|js|eot|ttf|woff|woff2)$ {
+}
+location ~* \.(?i:pdf|docx?|xlsx?|pp[st]x?|psd|odt|key)$ {
+}
+location ~* \.(?i:mp[2-5g]|m4[av]|og[gv]|wav|mov|wm[av]|avi|3g[p2])$ {
+}
+location ~* \.(?i:xml|json)$ {
+}
+location / {
+if ($request_uri ~ "screenshot(?:\-\d+)?\.(?:jpe?g|png|gif)$"){
+return 403;
+}
+}
