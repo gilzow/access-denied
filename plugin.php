@@ -124,14 +124,17 @@ add_filter('body_class',function($aryClasses){
  */
 add_filter('authenticate',function($objUser){
     if(is_wp_error($objUser)){
-        if(isset($objUser->errors['incorrect_password']) || isset($objUser->errors['invalid_username'])){
+        if(
+                isset($objUser->errors['incorrect_password']) 
+            ||  isset($objUser->errors['invalid_username'])
+            ||  isset($objUser->errors['invalid_email'])
+        ){
             $objUser = null;;
         }
     }
 
     return $objUser;
 },99,1);
-
 /**
  * Alternate way to remove error message indicating an invalid user, or incorrect password
  */
