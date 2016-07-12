@@ -1,12 +1,15 @@
 # ideally, only allow access to those ip address/ranges that should have access
 <FilesMatch ".*">
     <IfModule !mod_authz_core.c>
-        Allow from 0.0.0.1
-        Allow from 0.0.0.2
+         deny from all
+         allow from 128.206.
+         allow from 161.130.
+         allow from 10.7.
     </IfModule>
     <IfModule mod_authz_core.c>
-        Require ip 0.0.0.1
-        Require ip 0.0.0.2
+        Require ip 128.206.
+        Require ip 161.130.
+        Require ip 10.7.
     </IfModule>
 </FilesMatch>
 
