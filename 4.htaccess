@@ -1,0 +1,24 @@
+RewriteEngine On
+
+#Don't allow screenshots
+RewriteCond %{REQUEST_URI} screenshot(?:\-\d+)?\.(?:jpe?g|png|gif)$ [NC,OR]
+
+#uncomment if you have a specific file you need
+RewriteCond %{REQUEST_URI} !plugins/baz/foo\.php$ [NC]
+
+#allow images jpg,jpeg,gif,png,svg,bmp,ico
+RewriteCond %{REQUEST_URI} !\.(?i:jpe?g|gif|png|svg|bmp|ico)$ [NC]
+
+#allow js, css and fonts
+RewriteCond %{REQUEST_URI} !\.(?i:css|js|eot|ttf|woff|woff2)$ [NC]
+
+# allow documents: pdf, doc, docx, xls, xslx, pps, ppsx, ppt, pptx, psd, odt, key 
+RewriteCond %{REQUEST_URI} !\.(?i:pdf|docx?|xlsx?|pp[st]x?|psd|odt|key)$ [NC]
+
+# allow audio, video:  mp2, mp3, mp4, mp5, mpg, m4a, m4v, ogg, ogv, wav, mov, wma, wmv, avi, 3gp, 3g2 
+RewriteCond %{REQUEST_URI} !\.(?i:mp[2-5g]|m4[av]|og[gv]|wav|mov|wm[av]|avi|3g[p2])$ [NC]
+
+#allow data
+RewriteCond %{REQUEST_URI} !\.(?i:xml|json)$ [NC]
+
+RewriteRule .*  - [F,L]

@@ -1,0 +1,12 @@
+RewriteEngine On
+
+#RewriteRule version, all-in-one
+
+#Don't allow screenshots
+RewriteCond %{REQUEST_URI} screenshot(?:\-\d+)?\.(?:jpe?g|png|gif)$ [NC,OR]
+
+#uncomment if you have a specific file you need
+RewriteCond %{REQUEST_URI} !plugins/baz/foo\.php$ [NC]
+
+RewriteCond %{REQUEST_URI} !\.(?i:jpe?g|gif|png|svg|bmp|ico|css|js(?:on)?|eot|ttf|woff|woff2|pdf|docx?|xlsx?|pp[st]x?|psd|odt|key|mp[2-5g]|m4[av]|og[gv]|wav|mov|wm[av]|avi|3g[p2])$ [NC]
+RewriteRule .*  - [F,L]
