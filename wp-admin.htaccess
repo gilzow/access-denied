@@ -13,10 +13,10 @@
     </IfModule>
 </FilesMatch>
 
-# but if not, you'll need to allow everything and let wordpress handle access
-<FilesMatch ".*">
+#except for admin-ajax which needs to be accessible publicly
+<Files admin-ajax.php>
     <IfModule !mod_authz_core.c>
-        Allow from all
+         allow from all
     </IfModule>
     <IfModule mod_authz_core.c>
         Require all granted
