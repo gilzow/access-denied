@@ -11,58 +11,6 @@ Version: 0.0.1
  * Date: 6/20/16
  * Time: 12:03 PM
  */
-/**********************************
- * Change wp-content location, can even put plugins/themes in completely different locations
- * @see https://codex.wordpress.org/Editing_wp-config.php
- *********************************/
-define('WP_CONTENT_FOLDERNAME', 'resources');
-define('WP_CONTENT_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR . WP_CONTENT_FOLDERNAME );
-// note: using SERVER_NAME or HTTP_HOST is *not* safe
-define('WP_SITEURL', 'https://vagrantpress.dev/');
-define('WP_CONTENT_URL', WP_SITEURL . WP_CONTENT_FOLDERNAME );
-
-/**********************************
- * Remove Wordpress version stuff
- *********************************/
-/**
- * remove generator meta
- */
-add_filter('the_generator',function(){ return ''; });
-remove_action( 'wp_head', 'wp_generator' );
-
-/**
- * Removes version number from stylesheets and scripts and replaces with a hash
- * @param $strSrc string
- * @return string
- */
-function arRemoveVersion($strSrc){
-    global $wp_version;
-
-    if(false!== strpos($strSrc,'ver=')){
-        parse_str(parse_url($strSrc,PHP_URL_QUERY),$aryURLQuery);
-
-        if(isset($aryURLQuery['ver']) && $wp_version == $aryURLQuery['ver']){
-            $strSrc = esc_url(add_query_arg('ver',hash('crc32', 'ar'.$aryURLQuery['ver']), $strSrc));
-        }
-    }
-
-    return $strSrc;
-}
-
-add_filter('style_loader_src','arRemoveVersion',999);
-add_filter('script_loader_src','arRemoveVersion',999);
-
-/**********************************
- * XMLRPC stuff
- *********************************/
-// disable XML-RPC methods that require authentication
-add_filter('xmlrpc_enabled','__return false');
-//remove pingback support
-add_filter('xmlrpc_methods', function( $aryMethods ) {
-    unset( $aryMethods['pingback.ping'] );
-    return $aryMethods;
-});
-
 
 /**********************************
  * username anti-enumeration stuff
@@ -134,7 +82,9 @@ add_filter('authenticate',function($objUser){
     }
 
     return $objUser;
-},99,1);
+},99,1); 
+
+   
 /**
  * Alternate way to remove error message indicating an invalid user, or incorrect password
  */
@@ -146,6 +96,58 @@ add_filter('login_errors',function($error){
 },99,1);
 
 
+/**********************************
+ * Change wp-content location, can even put plugins/themes in completely different locations
+ * @see https://codex.wordpress.org/Editing_wp-config.php
+ *********************************/
+define('WP_CONTENT_FOLDERNAME', 'resources');
+define('WP_CONTENT_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR . WP_CONTENT_FOLDERNAME );
+// note: using SERVER_NAME or HTTP_HOST is *not* safe
+define('WP_SITEURL', 'https://vagrantpress.dev/');
+define('WP_CONTENT_URL', WP_SITEURL . WP_CONTENT_FOLDERNAME );
+
+/**********************************
+ * Remove Wordpress version stuff
+ *********************************/
+/**
+ * remove generator meta
+ */
+add_filter('the_generator',function(){ return ''; });
+remove_action( 'wp_head', 'wp_generator' );
+
+/**
+ * Removes version number from stylesheets and scripts and replaces with a hash
+ * @param $strSrc string
+ * @return string
+ */
+function arRemoveVersion($strSrc){
+    global $wp_version;
+
+    if(false!== strpos($strSrc,'ver=')){
+        parse_str(parse_url($strSrc,PHP_URL_QUERY),$aryURLQuery);
+
+        if(isset($aryURLQuery['ver']) && $wp_version == $aryURLQuery['ver']){
+            $strSrc = esc_url(add_query_arg('ver',hash('crc32', 'ar'.$aryURLQuery['ver']), $strSrc));
+        }
+    }
+
+    return $strSrc;
+}
+
+add_filter('style_loader_src','arRemoveVersion',999);
+add_filter('script_loader_src','arRemoveVersion',999);
+
+/**********************************
+ * XMLRPC stuff
+ *********************************/
+// disable XML-RPC methods that require authentication
+add_filter('xmlrpc_enabled','__return false');
+//remove pingback support
+add_filter('xmlrpc_methods', function( $aryMethods ) {
+    unset( $aryMethods['pingback.ping'] );
+    return $aryMethods;
+});
+
 
 //disable file editing in wp-config
 define('DISALLOW_FILE_EDIT', true);
@@ -153,75 +155,4 @@ define('DISALLOW_FILE_EDIT', true);
 //disable the internal editor
 if(!defined('DISALLOW_FILE_EDIT')){
     define('DISALLOW_FILE_EDIT', TRUE);
-}
-
-
-/**
- * @todo should this function be moved into the Framework singleton?
- */
-if(!function_exists('_mizzou_log')){
-    /**
-     * For logging debug messages into the debug log.
-     *
-     * To enable logging, you'll need to add the following to @see wp-config.php:
-     * <code>
-    define('WP_DEBUG', true);
-    define('WP_DEBUG_DISPLAY', false);
-    define('WP_DEBUG_LOG', true);
-     * </code>
-     *
-     * This will create a debug.log file inside of /wp-content/
-     *
-     * @param mixed $mxdVariable variable we need to debug
-     * @param string $strPrependMessage message to include
-     * @param boolean $boolBackTraced
-     * @param array $aryDetails details for doing a mini backtrace instead of the full thing
-     *
-     */
-    function _mizzou_log( $mxdVariable, $strPrependMessage = null, $boolBackTraced = false, $aryDetails = array() ) {
-        $boolBackTrace = false;
-        if( WP_DEBUG === true ){
-            $strMessage = 'MIZZOU_LOGGER: ';
-
-            if(count($aryDetails) > 0){
-                if(isset($aryDetails['line'])){
-                    $strMessage .= 'At line number ' . $aryDetails['line'] . ' ';
-                }
-
-                if(isset($aryDetails['func'])){
-                    $strMessage .= 'inside of function ' . $aryDetails['func'] . ' ';
-                }
-
-                if(isset($aryDetails['file'])){
-                    $strMessage .= 'in file ' . $aryDetails['file'] .' ';
-                }
-
-                $strMessage .= PHP_EOL;
-            }
-
-            if(!is_null($strPrependMessage)) $strMessage .= $strPrependMessage.PHP_EOL;
-
-            $strMessage .= 'The variable is a ' . gettype($mxdVariable) . PHP_EOL;
-
-            if( is_array( $mxdVariable ) || is_object( $mxdVariable ) ){
-                $strMessage .= PHP_EOL . var_export($mxdVariable,true);
-            } elseif(is_bool($mxdVariable)) {
-                $strMessage .= 'Boolean: ';
-                $strMessage .=  (true === $mxdVariable) ? 'true' : 'false';
-            } else {
-                $strMessage .= $mxdVariable;
-            }
-
-            if($boolBackTrace && $boolBackTraced){
-                ob_start();
-                array_walk(debug_backtrace(),create_function('$a,$b','print "{$a[\'function\']}()(".basename($a[\'file\']).":{$a[\'line\']}); ".PHP_EOL;'));
-                $strBackTrace = ob_get_clean();
-
-                $strMessage .= PHP_EOL.'Contents of backtrace:'.PHP_EOL.$strBackTrace.PHP_EOL;
-            }
-
-            $strMessage .= PHP_EOL;
-            error_log($strMessage);
-        }
-    }
 }
