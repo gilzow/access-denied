@@ -7,9 +7,9 @@
          allow from 10.7.
     </IfModule>
     <IfModule mod_authz_core.c>
-        Require ip 128.206.
-        Require ip 161.130.
-        Require ip 10.7.
+        Require ip 128.206.0.0/16
+        Require ip 161.130.0.0/16
+        Require ip 10.7.0.0/16
     </IfModule>
 </FilesMatch>
 
