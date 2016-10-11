@@ -17,7 +17,7 @@ RewriteEngine On
 #alternative rewritecond version
 #RewriteCond %{REQUEST_URI} screenshot(?:\-\d+)?\.(?:jpe?g|png|gif)$ [NC,OR]
 #RewriteCond %{REQUEST_URI} !plugins/baz/foo\.php$ [NC]
-RewriteCond %{REQUEST_URI} !\.(?i:jpe?g|gif|png|svg|bmp|ico|css|js(?:on)?|eot|ttf|woff|woff2|pdf|docx?|xlsx?|pp[st]x?|psd|odt|key|mp[2-5g]|m4[av]|og[gv]|wav|mov|wm[av]|avi|3g[p2])$ [NC]
+RewriteCond %{REQUEST_URI} !\.(?i:jpe?g|gif|png|svg|bmp|ico|css|js(?:on)?|eot|ttf|woff|woff2|pdf|docx?|xlsx?|pp[st]x?|psd|od[tsp]|key|mp[2-5g]|m4[av]|og[gv]|wav|mov|wm[av]|avi|3g[p2])$ [NC]
 RewriteRule .*  - [F,L]
 
 #RewriteRule version broken up
@@ -35,8 +35,8 @@ RewriteCond %{REQUEST_URI} !\.(?i:jpe?g|gif|png|svg|bmp|ico)$ [NC]
 #allow js, css and fonts
 RewriteCond %{REQUEST_URI} !\.(?i:css|js|eot|ttf|woff|woff2)$ [NC]
 
-# allow documents: pdf, doc, docx, xls, xslx, pps, ppsx, ppt, pptx, psd, odt, key 
-RewriteCond %{REQUEST_URI} !\.(?i:pdf|docx?|xlsx?|pp[st]x?|psd|odt|key)$ [NC]
+# allow documents: pdf, doc, docx, xls, xslx, pps, ppsx, ppt, pptx, psd, odt, ods, odp, key
+RewriteCond %{REQUEST_URI} !\.(?i:pdf|docx?|xlsx?|pp[st]x?|psd|od[tsp]|key)$ [NC]
 
 # allow audio, video:  mp2, mp3, mp4, mp5, mpg, m4a, m4v, ogg, ogv, wav, mov, wma, wmv, avi, 3gp, 3g2 
 RewriteCond %{REQUEST_URI} !\.(?i:mp[2-5g]|m4[av]|og[gv]|wav|mov|wm[av]|avi|3g[p2])$ [NC]
