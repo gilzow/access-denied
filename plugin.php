@@ -2,15 +2,9 @@
 /*
 Plugin Name: Anti-Recon
 Description: Attempts to prevent recon data gathering
-Author: WpCampus
-Version: 0.0.1
+Author: Paul Gilzow
+Version: 0.0.3
 */
-/**
- * Code to be used in the plugin
- * User: gilzowp
- * Date: 6/20/16
- * Time: 12:03 PM
- */
 
 /**********************************
  * username anti-enumeration stuff
@@ -31,13 +25,30 @@ add_filter('redirect_canonical',function($strRedirectionURL, $strRequestedURL){
 }, 10,2);
 
 /**
- * Force wordpress to use /?author=id for author permalink
- */
-add_action('init',function(){
-    global $wp_rewrite;
-    $wp_rewrite->author_structure = '';
+* Changes author permalink to use author=# instead of username
+*
+* @param $strLink   string  Prepared link to Author's archive page
+* @param $intID     integer Author User ID
+*
+* @return string    Link to Author's archive page
+*/
+add_filter('author_link',function($strLink,$intID){
+    return home_url('/') . '?author=' . $intID;
+},10,2);
 
-});
+/**
+* Corrects author feed link after filtering author_link
+*
+* @param $strLink   string  Prepared link to author feed
+* @param $strFeed   string  Feed type
+* 
+* @return string Prepared link to author feed
+*/
+add_filter('author_feed_link',function ($strLink,$strFeed){
+    if(1 == preg_match('/^\/([^\/]+)/',$strLink,$aryMatch)){
+        return $aryMatch[0] . '&feed=' . $strFeed;         
+    }
+},10,2);
 
 /**
  * Removes username from the body class list.  Why does wordpress include the user name in the body class?  So you can
@@ -64,6 +75,22 @@ add_filter('body_class',function($aryClasses){
     return $aryClasses;
 },100,1);
 
+/**
+* Remove slug property from response to user query
+* 
+* @param $objResponse   WP_REST_Response    Prepared response object to REST API call
+* @param $objUser       WP_User             User object used to creare response
+* @param $objRequest    WP_REST_Request     Requested object
+* 
+* @return WP_REST_Response 
+*/
+add_filter('rest_prepare_user',function($objResponse,$objUser,$objRequest){
+    if(isset($objResponse->data['slug']) && '' !== $objResponse->data['slug']){
+        unset($objResponse->data['slug']);
+    }
+
+    return $objResponse;
+},10,3);
 
 /**
  * Removes the error message indicating an invalid user, or incorrect password for a specific user
@@ -150,7 +177,6 @@ add_filter('xmlrpc_methods', function( $aryMethods ) {
 
 
 //disable file editing in wp-config
-define('DISALLOW_FILE_EDIT', true);
 //or in our plugin
 //disable the internal editor
 if(!defined('DISALLOW_FILE_EDIT')){
