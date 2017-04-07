@@ -8,8 +8,8 @@ Branches match up to conference / event:
 * [WordCamp Miami 2017](https://github.com/gilzow/access-denied/tree/wcmia2017)
 * [WordCamp St. Louis 2017](https://github.com/gilzow/access-denied/tree/2017)
 * [HeWeb 2016](https://github.com/gilzow/access-denied/tree/master)
-* [MoreNET 2016](https://github.com/gilzow/access-denied/tree/master)
-* [WPCampus 2016](https://github.com/gilzow/access-denied/tree/master) 
+* [MoreNET 2016](https://github.com/gilzow/access-denied/tree/morenet)
+* [WPCampus 2016](https://github.com/gilzow/access-denied/tree/wpcampus-version) 
 * Your event? Contact me! 
 
 ## Files
